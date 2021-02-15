@@ -25,7 +25,8 @@ as PRNR (print register value) and PRNM (print memory value).
 *
 !
 ```
-This program will move 16384 into R0 and multiply R0 on a loop until a carryover occurs.
+This program will move 16384 into R0 and multiply R0 by two on a loop until a carryover occurs,
+printing R0 each loop.
 Output:
 ```
 Memory size set to 32 bytes.
