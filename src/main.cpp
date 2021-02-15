@@ -16,8 +16,13 @@ int main(int argc, char **argv)
   //print_all_memory(mem);
   CPU cpu(&mem);
   load_program_into_memory(mem, mem_size);
+
+  for(int i = 1; i < argc; i++)
+    if(!strcmp(argv[i], "print_mem=true"))
+      print_all_memory(mem);
+
+  printf("\n***EXECUTION***\n\n");
   cpu.run();
 
-
-
+  return 0;
 }

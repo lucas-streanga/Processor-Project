@@ -1,5 +1,6 @@
 #include"ISA.h"
 #include"error_handler.h"
+#include"init.h"
 #include<stdio.h>
 #include<cstring>
 
@@ -49,11 +50,12 @@ bool check_conditional(CPU & cpu, byte conditional)
 void op_end(struct CPU & cpu, instruction & ins)
 {
   cpu.cycles++;
-  printf("End opcode recieved.\n");
+  printf("\nEnd opcode recieved.\n");
 }
 
 void op_add(struct CPU & cpu, instruction & ins)
 {
+  LOG("ADD");
   if(check_conditional(cpu, ins.conditional))
   {
     //Add instruction code
@@ -68,7 +70,7 @@ void op_add(struct CPU & cpu, instruction & ins)
     else
       operand2 = (cpu.R[ins.op2] + (ins.shift)) & MAX_U;
 
-    LOG("ADD\nop1 : " << operand1);
+    LOG("op1 : " << operand1);
     LOG("op2 : " << operand2);
     LOG("Result reg: " << destination);
 
@@ -110,6 +112,7 @@ void op_sub(struct CPU & cpu, instruction & ins)
 {
   if(check_conditional(cpu, ins.conditional))
   {
+    LOG("SUB");
     //Sub instruction code
     word destination, operand1, operand2, shift;
     uint64_t result;
@@ -122,7 +125,7 @@ void op_sub(struct CPU & cpu, instruction & ins)
     else
       operand2 = (cpu.R[ins.op2] + (ins.shift)) & MAX_U;
 
-    LOG("SUB\nop1 : " << operand1);
+    LOG("op1 : " << operand1);
     LOG("op2 : " << operand2);
     LOG("Result reg: " << destination);
 
@@ -164,6 +167,7 @@ void op_ldr(struct CPU & cpu, instruction & ins)
 {
   if(check_conditional(cpu, ins.conditional))
   {
+    LOG("LDR");
     word destination, operand;
     destination = ins.Rn;
 
@@ -177,7 +181,7 @@ void op_ldr(struct CPU & cpu, instruction & ins)
       error_handler(ERR_SEG, &cpu);
 
     memcpy(cpu.R + destination, cpu.mem->data + operand, 4);
-    LOG("LDR\nMoved " << cpu.R[destination] << " from address " << operand << " into register " << destination);
+    LOG("Moved " << cpu.R[destination] << " from address " << operand << " into register " << destination);
   }
 }
 
@@ -185,6 +189,7 @@ void op_ldrh(struct CPU & cpu, instruction & ins)
 {
   if(check_conditional(cpu, ins.conditional))
   {
+    LOG("LDRH");
     word destination, operand;
     destination = ins.Rn;
 
@@ -198,7 +203,7 @@ void op_ldrh(struct CPU & cpu, instruction & ins)
       error_handler(ERR_SEG, &cpu);
 
     memcpy(cpu.R + destination, cpu.mem->data + operand, 2);
-    LOG("LDRH\nMoved " << cpu.R[destination] << " from address " << operand << " into register " << destination);
+    LOG("Moved " << cpu.R[destination] << " from address " << operand << " into register " << destination);
   }
 }
 
@@ -206,6 +211,7 @@ void op_ldrb(struct CPU & cpu, instruction & ins)
 {
   if(check_conditional(cpu, ins.conditional))
   {
+    LOG("LDRB");
     word destination, operand;
     destination = ins.Rn;
 
@@ -219,7 +225,7 @@ void op_ldrb(struct CPU & cpu, instruction & ins)
       error_handler(ERR_SEG, &cpu);
 
     memcpy(cpu.R + destination, cpu.mem->data + operand, 1);
-    LOG("LDRB\nMoved " << cpu.R[destination] << " from address " << operand << " into register " << destination);
+    LOG("Moved " << cpu.R[destination] << " from address " << operand << " into register " << destination);
   }
 }
 
@@ -227,6 +233,7 @@ void op_str(struct CPU & cpu, instruction & ins)
 {
   if(check_conditional(cpu, ins.conditional))
   {
+    LOG("STR");
     word operand, destination;
     operand = ins.Rn;
 
@@ -240,7 +247,7 @@ void op_str(struct CPU & cpu, instruction & ins)
       error_handler(ERR_SEG, &cpu);
 
     memcpy(cpu.mem->data + destination, cpu.R + operand, 4);
-    LOG("STR\nMoved " << cpu.R[operand] << " from register " << (word) ins.Rn << " into address " << destination);
+    LOG("Moved " << cpu.R[operand] << " from register " << (word) ins.Rn << " into address " << destination);
   }
 }
 
@@ -248,6 +255,7 @@ void op_strh(struct CPU & cpu, instruction & ins)
 {
   if(check_conditional(cpu, ins.conditional))
   {
+    LOG("STRH");
     word operand, destination;
     operand = ins.Rn;
 
@@ -261,7 +269,7 @@ void op_strh(struct CPU & cpu, instruction & ins)
       error_handler(ERR_SEG, &cpu);
 
     memcpy(cpu.mem->data + destination, cpu.R + operand, 2);
-    LOG("STRH\nMoved " << cpu.R[operand] << " from register " << (word) ins.Rn << " into address " << destination);
+    LOG("Moved " << cpu.R[operand] << " from register " << (word) ins.Rn << " into address " << destination);
   }
 }
 
@@ -269,6 +277,7 @@ void op_strb(struct CPU & cpu, instruction & ins)
 {
   if(check_conditional(cpu, ins.conditional))
   {
+    LOG("STRB");
     word operand, destination;
     operand = ins.Rn;
 
@@ -282,7 +291,7 @@ void op_strb(struct CPU & cpu, instruction & ins)
       error_handler(ERR_SEG, &cpu);
 
     memcpy(cpu.mem->data + destination, cpu.R + operand, 1);
-    LOG("STRB\nMoved " << cpu.R[operand] << " from register " << (word) ins.Rn << " into address " << destination);
+    LOG("Moved " << cpu.R[operand] << " from register " << (word) ins.Rn << " into address " << destination);
   }
 }
 
@@ -290,6 +299,7 @@ void op_mov(struct CPU & cpu, instruction & ins)
 {
   if(check_conditional(cpu, ins.conditional))
   {
+    LOG("MOV");
     word destination, operand, shift;
     destination = ins.Rn;
 
@@ -303,7 +313,53 @@ void op_mov(struct CPU & cpu, instruction & ins)
 
     cpu.R[destination] = operand;
 
-    LOG("MOV\nMoved " << operand << " into register "  << destination);
+    LOG("Moved " << operand << " into register "  << destination);
+  }
+}
+
+void op_cmp(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    LOG("CMP");
+    //cmp instruction code is similar to sub, but result is never stored.
+    word destination, operand1, operand2;
+    operand1 = cpu.R[ins.Rn];
+    uint64_t result;
+
+    //Immediate value
+    if(ins.I)
+      operand2 = ((ins.Rd << 10) | (ins.immed)) % MAX_U;
+    else
+      operand2 = ((cpu.R[ins.Rd]) + ins.immed) % MAX_U;
+
+    LOG("op1 : " << operand1);
+    LOG("op2 : " << operand2);
+
+    cpu.cycles++;
+    result = (dword) operand1 - (dword) operand2;
+
+    /* Setting the flags... */
+
+    cpu.Z = 0;
+    cpu.N = 0;
+    cpu.C = 0;
+    cpu.O = 0;
+    cpu.cycles += 4;
+    if((result & MAX_U) == 0)
+      cpu.Z = 1;
+    if((result & MAX_U) & SIGN_BIT)
+      cpu.N = 1;
+    //Carry over... inverted carry flag
+    if(((int32_t) (result & MAX_U)) >= 0)
+      cpu.C = 1;
+
+    //Now for overflow checks
+    if( ( (operand1 & SIGN_BIT) ^ (operand2 & SIGN_BIT) ) )
+     if( (result ^ operand1) & SIGN_BIT)
+        cpu.O = 1;
+
+    LOG("Flags:\nZ: " << (bool) cpu.Z << "\nN: " << (bool) cpu.N << "\nC: " << (bool) cpu.C << "\nO: " << (bool) cpu.O);
   }
 }
 
@@ -311,6 +367,7 @@ void op_prnr(struct CPU & cpu, instruction & ins)
 {
   if(check_conditional(cpu, ins.conditional))
   {
+    LOG("PRNR");
     /* Print Register */
     /* Flags stay the same */
     /* I and S become number of registers */
@@ -372,6 +429,67 @@ void op_prnr(struct CPU & cpu, instruction & ins)
   }
 }
 
+void op_prnm(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    LOG("PRNM");
+    word address;
+    /* Print Memory */
+    /* Flags stay the same */
+    /* I and S become number of registers */
+    byte num_bytes = (ins.Rn >> 2);
+    if(num_bytes == 0)
+      num_bytes = 1;
+    else if(num_bytes == 1)
+      num_bytes = 2;
+    else if(num_bytes == 2)
+      num_bytes = 4;
+    else if(num_bytes == 3)
+      num_bytes = 8;
+
+    byte specifier = (ins.Rn & 0b0011);
+    LOG("bytes " << (int) num_bytes);
+    LOG("Specifier " << (int) specifier);
+    LOG("I : " << (int) ins.I);
+    LOG("S : " << (int) ins.S);
+
+    cpu.cycles += 2;
+
+    /* Now we need to find out the address that we want to print */
+    //
+    if(ins.I)
+      address = ((ins.Rd << 10) | (ins.immed));
+    else
+      address = ((cpu.R[ins.Rd] + (ins.immed)) & MAX_U);
+
+    //print_all_memory(*(cpu.mem));
+
+    LOG("MEMSIZE: " << cpu.mem->size);
+    if(address > (cpu.mem->size - num_bytes))
+      error_handler(ERR_SEG, &cpu);
+
+    dword result = 0;
+    memcpy(&result, cpu.mem->data + address, num_bytes);
+
+    switch(specifier)
+    {
+      case 0:
+        printf("Address %lu: %llu\n", address, result);
+        break;
+      case 1:
+        printf("Address %lu: %lld\n", address, result);
+        break;
+      case 2:
+        printf("Address %lu: 0x%llX\n", address, result);
+        break;
+      case 3:
+        printf("Address %lu: %c\n", address, (char) result);
+        break;
+    }
+  }
+}
+
 ISA::ISA()
 {
   /*Initialize the handlers for the opcodes */
@@ -387,9 +505,9 @@ ISA::ISA()
   handlers[OP_STRH] = op_strh;
   handlers[OP_STRB] = op_strb;
   handlers[OP_MOV] = op_mov;
-  handlers[OP_CMP] = NULL;
+  handlers[OP_CMP] =  op_cmp;
   handlers[OP_PRNR] = op_prnr;
-  handlers[OP_PRNM] = NULL;
+  handlers[OP_PRNM] = op_prnm;
   handlers[OP_END] = op_end;
 
 }

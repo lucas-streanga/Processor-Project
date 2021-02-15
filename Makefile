@@ -11,7 +11,7 @@ OBJ4 = $(SRC4:.cpp=.o)
 OBJ5 = $(SRC5:.cpp=.o)
 OBJ6 = $(SRC6:.cpp=.o)
 
-EXE = processor
+EXE = Processor
 
 HFILES = include/proc_defines.h include/error_handler.h include/CPU.h include/Virtual_memory.h include/init.h include/ISA.h
 CFLAGS = -g

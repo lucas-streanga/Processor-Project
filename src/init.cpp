@@ -3,13 +3,20 @@
 size_t get_mem_size(int argc, char **argv)
 {
   size_t mem_size = DEFAULT_MEM_SIZE;
-  if(argc < 2)
+  char * mem_input = NULL;
+
+  for(int i = 1; i < argc; i++)
+    if(!strncmp(argv[i], "size=", 5))
+      mem_input = argv[i] + 5;
+
+  if(argc < 2 || mem_input == NULL)
     printf("Default memory size of %llu bytes in use\n", DEFAULT_MEM_SIZE);
   else
   {
     try
     {
-      mem_size = std::stoll(argv[1]);
+
+      mem_size = std::stoll(mem_input);
       printf("Memory size set to %llu bytes.\n", mem_size);
     }
     catch(const std::invalid_argument& e)
@@ -93,6 +100,6 @@ void print_all_memory(Virtual_memory &mem)
 {
   printf("***PRINTING MEMORY***\n");
   for(int i = 0; i < mem.size; i += 4)
-    printf("%lu\n", *((word *)(mem.data + i)));
+    printf("%-12lu%010lu\t%lX\n", i, *((word *)(mem.data + i)), *((word *)(mem.data + i)));
   printf("***DONE***\n");
 }
