@@ -17,9 +17,13 @@ as PRNR (print register value) and PRNM (print memory value).
 The **size="size"** command line parameter will allow the user to set the size of memory in bytes.
 If the size is invalid or no size is given, the default size of **16384** will be used. The 
 **print_mem=true** parameter may be passed in to print the content of the memory before execution
-begins, so that the programmer may check their data is correct. 
+begins, so that the programmer may check their data is correct. A file with instructions and data is
+redirected in with **<**.
 
 # Program File Formatting
 The user program should be written in plain text and each instruction as 32 characters, 1 or 0. 
-Whitespace is ignored, and # may be used for comments. The special character *** * *** may be used
-as a shorthand for the end execution instruction, opcode 255. The file should end with 
+Whitespace is ignored, and # may be used for comments. The special character * **(asterisk)** may be used
+as a shorthand for the end execution instruction, opcode 255. The file should end with **!** so the program
+knows when to stop reading. Without an end execution instruction, the processor will execute through all of 
+memory until the PC reaches the end of memory. Without an ! to indicate end of file, stdin contents will continue
+to be read untill all of the memory is filled.
