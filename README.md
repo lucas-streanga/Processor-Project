@@ -116,5 +116,56 @@ value of up to 10 bits. Most instructions follow this pattern, but load, store, 
 or 1 register and a shift, allowing for larger immediate values or shifts. The print register instruction and print memory instruction are also formatted
 specially, as these are not traditional instruction.
 
+## Registers
+The processor has 16 register available to the user, R0 - R15. R14 is the program counter and can be edited for loops, and R15 is the stack pointer
+which can be used to read data from memory. The processor also has another register not accessible, the IR or instruction register. This hold the 
+current instruction in execution.
+
+## Processor Pipeline
+The processor pipeline is broken into three stages, **fetch**, **decode**, and **execute**. The fetch command grabs the instruction from memory using the PC.
+The decode step decodes the instruction into its individual parts, and the exeucte command runs the instruction. The PC is incremented by 4 bytes after each fetch. 
+
+## Processor Flags
+The processor includes 4 flags, Z (zero), N (negative), O (overflow), and C (carryover). The flags are only set after execution of instruction if the S bit is set to 1 in the instruction. 
+The Zero flag is set if the result is 0, the Negative flag is set if the result is negative (MSB is 1), the Overflow flag is set if an overflow occurs (sign bit corrupted) and the Carryover flag if the result exceeds 32 bits in length and is truncated. 
+
+## Conditonals
+The conditionals that determine if an instruction is executed or skipped is defined by 4 bits in the instruction. Therefore, there are 0 - 15 possible 
+conditionals.
+
+- 0000  AL
+  - Always, regardless of flags set.
+- 0001  EQ
+  - Equal, if the Z flag is set.
+- 0010  NE
+  - Not equal, if Z flag is not set.
+- 0011  CS
+  - Carry set, if C flag is set.
+- 0100  CC
+  - Carry clear, if the C flag is not set. 
+- 0101  MI
+  - Negative, if the N flag is set.
+- 0110  PL
+  - Positive, if the N flag is not set.
+- 0111  OS
+  - Overflow set, if the O flag is set.
+- 1000  OC
+  - Overflow clear, if the O flag is not set.
+- 1001  HI
+  - Unsigned higher, if C is set and Z is clear.
+- 1010  LS
+  - Unsigned lower, if C is clear and Z is set.
+- 1011  GE
+  - Greater than or equals, if N and O are set or N and O clear.
+- 1100  LT
+  - Less than, if N set and O clear or N clear and O set.
+- 1101  GT
+  - Greater than, if Z is clear and either N and O set or N and O clear.
+- 1110  LE
+  - Less than or equals, if Z is set or N set and O clear or N clear and O set.
+- 1111  NV
+  - Never, never executes regardless of flags.
+  
+
 
 
