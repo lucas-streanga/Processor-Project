@@ -13,7 +13,58 @@ and stack pointer. The program counter is initialized to the start of memory and
 stack pointer to the end of the user's data. The program counter will be increamented
 4 bytes (1 instruction) after every instruction execution, and can be editied directly
 to create loops. The processor includes some special instructions for ease of use such 
-as PRNR (print register value) and PRNM (print memory value). 
+as PRNR (print register value) and PRNM (print memory value).
+
+# Sample Program
+```
+00001000000010000000001111111111 # move 16384 into register 0
+00001010000000000000000000000000 # print r0
+00000000000001000000000000000000 # add r0 and r0 and store in r0 + flags set
+00001010000000000000000000000000 # print r0
+00001000010010111000000000001000 # loop until carryover occurs
+*
+!
+```
+This program will move 16384 into R0 and multiply R0 on a loop until a carryover occurs.
+Output:
+```
+Memory size set to 32 bytes.
+Initializing Memory...
+Memory Initialized Successfully.
+CPU Initialized Successfully.
+Loading program into memory...
+
+***EXECUTION***
+
+R0: 1023
+R0: 2046
+R0: 4092
+R0: 8184
+R0: 16368
+R0: 32736
+R0: 65472
+R0: 130944
+R0: 261888
+R0: 523776
+R0: 1047552
+R0: 2095104
+R0: 4190208
+R0: 8380416
+R0: 16760832
+R0: 33521664
+R0: 67043328
+R0: 134086656
+R0: 268173312
+R0: 536346624
+R0: 1072693248
+R0: 2145386496
+R0: 4290772992
+R0: 4286578688
+
+End opcode recieved.
+Execution ended.
+Virtual Cycles used: 427
+```
 
 ## Usage
 The **size="size"** command line parameter will allow the user to set the size of memory in bytes.
@@ -57,6 +108,11 @@ else is auto allocated to the stack. No global variables are used.
 
 # Instruction Format
 Each instruction is **32 bits**. The first 8 bits define the opcode, 0 - 255. The next 4 bits define the condtional to run off of, explained later.
+The next bit defines if an immediate value should be used or a register value; this is called the I bit. The next bit defines 
+whether the flags should be set after execution; this is called the S bit. The next 4 bits represent the first register to use (0-15) and the 4 bits
+after that the destination register. The last 10 bits are either the second register to use and a shift of 6 bits if I is not set, or an immmediate
+value of up to 10 bits. Most instructions follow this pattern, but load, store, and move instructions are slightly different as they only require 2 register
+or 1 register and a shift, allowing for larger immediate values or shifts. 
 
 
 
