@@ -42,3 +42,7 @@ $(OBJ6) : $(SRC6) $(HFILES)
 
 debug: CFLAGS = -g -DDEBUG=1
 debug: all
+
+cleanup:
+	@echo "Deleting object files..."
+	rm -f src/*.o
