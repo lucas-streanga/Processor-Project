@@ -21,5 +21,5 @@ begins, so that the programmer may check their data is correct.
 
 # Program File Formatting
 The user program should be written in plain text and each instruction as 32 characters, 1 or 0. 
-Whitespace is ignored, and # may be used for comments. The special character ******* may be used
+Whitespace is ignored, and # may be used for comments. The special character *** * *** may be used
 as a shorthand for the end execution instruction, opcode 255. The file should end with 
