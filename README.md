@@ -112,7 +112,8 @@ The next bit defines if an immediate value should be used or a register value; t
 whether the flags should be set after execution; this is called the S bit. The next 4 bits represent the first register to use (0-15) and the 4 bits
 after that the destination register. The last 10 bits are either the second register to use and a shift of 6 bits if I is not set, or an immmediate
 value of up to 10 bits. Most instructions follow this pattern, but load, store, and move instructions are slightly different as they only require 2 register
-or 1 register and a shift, allowing for larger immediate values or shifts. 
+or 1 register and a shift, allowing for larger immediate values or shifts. The print register instruction and print memory instruction are also formatted
+specially, as these are not traditional instruction.
 
 
 
