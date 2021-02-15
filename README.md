@@ -30,4 +30,12 @@ knows when to stop reading. Without an end execution instruction, the processor 
 memory until the PC reaches the end of memory. Without an ! to indicate end of file, stdin contents will continue
 to be read untill all of the memory is filled.
 
+## Error Codes
+The program itself is difficult to crash, but the virtual processor may crash for a variety of reasons.
+The error codes are:
+
+- EOM: End of memory
+  - This occurs when the PC reaches the end of memory. This can occur if there is no end execution instruction in memory or if the PC
+  is edited to the end of memory.
+
 
