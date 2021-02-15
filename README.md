@@ -116,6 +116,34 @@ value of up to 10 bits. Most instructions follow this pattern, but load, store, 
 or 1 register and a shift, allowing for larger immediate values or shifts. The print register instruction and print memory instruction are also formatted
 specially, as these are not traditional instruction.
 
+# Opcodes
+The current defined opcodes are as follows:
+- 0: ADD
+  - Addition
+- 1: SUB
+  - Subtraction
+- 2: LDR
+  - Load one word from memory.
+- 3: LDRH
+  - Load one half-word from memory.
+- 4: LDRB
+  - Load one byte from memory.
+- 5: STR
+  - Store one word to memory.
+- 6: STRH
+  - Store one half-word to memory.
+- 7: STRB
+  - Store one byte to memory.
+- 8: MOV
+  - Move value into register.
+- 9: CMP
+  - Compare the values of two registers.
+- 10: PRNR
+  - Print content of up to 4 registers.
+- 11: PRNM
+  - Print value at memory address.
+- 255: END
+   - End execution.
 ## Registers
 The processor has 16 register available to the user, R0 - R15. R14 is the program counter and can be edited for loops, and R15 is the stack pointer
 which can be used to read data from memory. The processor also has another register not accessible, the IR or instruction register. This hold the 
