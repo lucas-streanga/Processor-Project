@@ -1,5 +1,5 @@
 # Processor-Project
-A virtual processor with a unique instruction set made in C++.
+A virtual processor with an instruction set similar to ARM made in C++.
 
 # How it works
 This virtual processor allows the user to write programs in machine code
@@ -24,7 +24,7 @@ redirected in with **<**.
 
 ## Program File Formatting
 The user program should be written in plain text and each instruction as 32 characters, 1 or 0. 
-Whitespace is ignored, and # may be used for comments. The special character * **(asterisk)** may be used
+Whitespace is ignored, and # may be used for comments. The special character **\*** may be used
 as a shorthand for the end execution instruction, opcode 255. The file should end with **!** so the program
 knows when to stop reading. Without an end execution instruction, the processor will execute through all of 
 memory until the PC reaches the end of memory. Without an ! to indicate end of file, stdin contents will continue
@@ -36,6 +36,27 @@ The error codes are:
 
 - EOM: End of memory
   - This occurs when the PC reaches the end of memory. This can occur if there is no end execution instruction in memory or if the PC
-  is edited to the end of memory.
+  is edited to the end of memory. This will force execution to end.
+- OOM - Out of memory
+  - This occurs when the virtual computer runs out of memory when initially loading the program. This will not end execution, but only
+  part of the program will be in memory, most likely resulting in unintended behavior. Make sure the virtual memory size is large enough
+  to store the entire program. 
+- UTA - Unable to allocate memory
+  - This occurs when the program cannot allocate the virtual memory. This is most likely because the memory size is too large for the computer
+  or OS. This will end the program. 
+- UOC - Unknown opcode
+  - This occurs when the virtual processor encounters an opcode not defined. Execution will continue and the instruction ignored. Defined opcodes
+  currently are 0 - 11 and opcode 255.
+- SEG - Segmentation fault
+  - This occurs during program execution when an instruction attempts to access virtual memory outside of its bounds. This will end the program execution.
+  Ensure instructions only access memory within the virtual memory bounds.
+
+### Program memory allocation details
+Virtual memory is variable from run to run and is allocated on the heap. The ISA is also allocated on the heap, but this will most likely change. Everything 
+else is auto allocated to the stack. No global variables are used.
+
+# Instruction Format
+Each instruction is **32 bits**. The first 8 bits define the opcode, 0 - 255. The next 4 bits define the condtional to run off of, explained later.
+
 
 
