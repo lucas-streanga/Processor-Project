@@ -194,6 +194,13 @@ conditionals.
 - 1111  NV
   - Never, never executes regardless of flags.
   
+  # Program Structure
+  
+  This project is divided into five modules. The CPU, the memory, the error handler, the ISA/instruction handler, and the initialization. The initialization occurs in main and in init.cpp and consists of converting the text file to data, allocating memory, creating the objects, etc. The CPU code is in CPU.cpp and the corresponding header file, and outlines the CPU structure like registers and flags, and the three CPU functions, fetch, decode, and execute. The memory module is defined in Virtual_memory.cpp and contains the structure used for the memory, like the data and size. The error handler is a simple function used to handlers the error codes and ending execution while preventing memory leaks. Finally, the ISA/instruction handler is shown in ISA.cpp and the header file and defines all the instructions in the ISA. The instructions are stored in an array of function pointers, where each instruction is defined in its own function, allowing for clear organization and easy access with array notation. The program also includes proc_defines.h, which has many defines and macros used for compilation, such as the binary representation of numbers needed for decoding instructions, opcode defintions, error code definitions, and debuging defintions.
+  
+  # Compilation
+  
+  The program includes a Makefile for compilation. Running **make** will compile the program as expected. **make debug** can be used to enable debug printouts during program execution to check instruction decoding and other details. **make cleanup** is used to delete object files. No dependencies other than GCC and the C and C++ standard libraries are required. 
 
 
 
