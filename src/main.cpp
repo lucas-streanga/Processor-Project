@@ -13,8 +13,9 @@ int main(int argc, char **argv)
 {
   size_t mem_size = get_mem_size(argc, argv);
   Virtual_memory mem(mem_size);
+  ISA isa;
   //print_all_memory(mem);
-  CPU cpu(&mem);
+  CPU cpu(&mem, &isa);
   load_program_into_memory(mem, mem_size);
 
   for(int i = 1; i < argc; i++)

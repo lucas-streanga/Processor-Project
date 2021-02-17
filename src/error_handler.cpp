@@ -5,7 +5,7 @@ void error_handler(word error_code, CPU * cpu)
   switch(error_code)
   {
     case ERR_OOM:
-      NONFATALERROR("Computer out of memory When loading program.\nOnly part of the program will be in memory.\nEither the memory is too small or the program does not end with \"!\".");
+      NONFATALERROR("Computer ran out of memory When loading program.\nOnly part of the program will be in memory.\nEither the memory is too small or the program does not end with \"!\".");
       break;
     case ERR_UTA:
       FATALERROR("Unable to allocate virtual memory. Is the size too large?");
@@ -31,10 +31,7 @@ void exit_procedure(CPU * cpu)
   {
     if(cpu->mem->data != NULL)
       free(cpu->mem->data);
-    if(cpu->isa != NULL)
-      delete cpu->isa;
 
-    cpu->isa = NULL;
     cpu->mem->data = NULL;
   }
   exit(0);

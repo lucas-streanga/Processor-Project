@@ -4,9 +4,10 @@
 #include<cstring>
 #include"init.h"
 
-CPU::CPU(Virtual_memory *mem)
+CPU::CPU(Virtual_memory *mem, ISA * isa)
 {
     this->mem = mem;
+    this->isa = isa;
     N = 0;
     Z = 0;
     C = 0;
@@ -15,19 +16,17 @@ CPU::CPU(Virtual_memory *mem)
     cycles = 0;
     for(int i = 0; i < REGISTERS; i++)
       R[i] = 0;
-    isa = new ISA();
     printf("CPU Initialized Successfully.\n");
 }
 
 CPU::~CPU()
 {
-  if(isa != NULL)
-    delete isa;
+
 }
 
 void CPU::fetch()
 {
-  if(R[14] >= this->mem->size)
+  if((R[14] + 4) > this->mem->size)
     error_handler(ERR_EOM, this);
   else
   {

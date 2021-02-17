@@ -17,7 +17,7 @@ struct CPU
   dword cycles;
   struct ISA *isa;
 
-  CPU(Virtual_memory *);
+  CPU(Virtual_memory *, ISA *);
   void fetch();
   void decode();
   void execute(struct instruction &);
