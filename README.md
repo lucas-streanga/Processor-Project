@@ -108,7 +108,7 @@ The error codes are:
   Ensure instructions only access memory within the virtual memory bounds.
 
 ### Program memory allocation details
-Virtual memory is variable from run to run and is allocated on the heap. The ISA is also allocated on the heap, but this will most likely change. Everything 
+Virtual memory is variable from run to run and is allocated on the heap. Everything 
 else is auto allocated to the stack. No global variables are used.
 
 # Instruction Format
