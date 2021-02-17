@@ -17,7 +17,7 @@ as PRNR (print register value) and PRNM (print memory value).
 
   # Compilation
   
-  The program includes a Makefile for compilation. Running **make** will compile the program as expected. **make debug** can be used to enable debug printouts during program execution to check instruction decoding and other details. **make cleanup** is used to delete object files. No dependencies other than GCC and the C and C++ standard libraries are required. 
+  The program includes a Makefile for compilation. Running **make** will compile the program as expected. **make debug** can be used to enable debug printouts during program execution to check instruction decoding and other details. **make cleanup** is used to delete object files. No dependencies other than GCC, make, and the C and C++ standard libraries are required. 
 
 # Sample Program
 ```
@@ -119,6 +119,9 @@ after that the destination register. The last 10 bits are either the second regi
 value of up to 10 bits. Most instructions follow this pattern, but load, store, and move instructions are slightly different as they only require 2 register
 or 1 register and a shift, allowing for larger immediate values or shifts. The print register instruction and print memory instruction are also formatted
 specially, as these are not traditional instruction.
+
+## Special Instructions
+Two special instructions are included for ease of use, PRNR (print register) and PRNM (print memory). These instructions do not follow the general structure of other instructions. PRNR is formatted as follows: First 8 bits is the opcode and the next 4 are the conditions. The next 2 bits is the amount of registers to print. You can print up to 4 registers with one PRNR instruction. The next 16 bits is the registers to print, 4 bits per register. The final 2 bits is the print specifier. 0 is for unsigned integer, 1 for signed integer, 2 for hexadecimal, and 3 for character. The PRNM has a different structure as well. The first 12 bits are identical (opcode and conditional), but the next two bits are the I and S bit. The I bit is used to determine if an immediate value for an address is used (I) or if the value is in a register (0). The S bit is not used. The next two bits represent the number of bytes to print, 0 for 1 byte, 1 for 2 bytes, 2 for 4 bytes, or 3 for 8 bytes. The next 2 bits is the specifier, defined the same as PRNR, and the next 14 bits is either a register (4 bits) with shift (10 bits) if I is not set or a 14 bit address if I is set. 
 
 # Opcodes
 The current defined opcodes are as follows:
