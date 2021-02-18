@@ -54,7 +54,8 @@ void load_program_into_memory(Virtual_memory & mem, size_t mem_size)
 	int z;
 	for(z = 0; z < mem_size / 4; z++)
 	{
-		char in[33];
+		char in[32] = {0};
+
 		char c = 0;
 		for(int p = 0; p < 32; p++)
 		{
