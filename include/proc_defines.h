@@ -52,6 +52,8 @@ and the calculation constants
 #define ERR_UOC   3
 //Virtual segmentation fault
 #define ERR_SEG   4
+//Incomplete instruction warning
+#define ERR_ICI   5
 
 /* Opcodes */
 #define OP_ADD    0

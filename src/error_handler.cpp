@@ -22,6 +22,9 @@ void error_handler(word error_code, CPU * cpu)
       FATALERROR("Segmentation fault in virtual memory.\nInstruction tried to access memory outside of bounds.");
       exit_procedure(cpu);
       break;
+    case ERR_ICI:
+      NONFATALERROR("Instruction appears incomplete or program is not terminated with \"!\".\nEnsure each instruction is 32 bits.");
+      break;
   }
 }
 

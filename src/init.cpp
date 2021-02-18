@@ -50,8 +50,9 @@ void load_program_into_memory(Virtual_memory & mem, size_t mem_size)
   word ins;
   int j = 0;
   int k = 0;
-	int flag = 1;
 	int z;
+  bool found_incomplete = false;
+
 	for(z = 0; z < mem_size / 4; z++)
 	{
 		char in[32] = {0};
@@ -60,6 +61,11 @@ void load_program_into_memory(Virtual_memory & mem, size_t mem_size)
 		for(int p = 0; p < 32; p++)
 		{
       scanf(" %c", in + p);
+      if(!found_incomplete && in[p] == 0)
+      {
+        error_handler(ERR_ICI, NULL);
+        found_incomplete = true;
+      }
 			if(in[p] == '!')
 			{
 				c = '!';
