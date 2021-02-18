@@ -25,6 +25,9 @@ void error_handler(word error_code, CPU * cpu)
     case ERR_ICI:
       NONFATALERROR("Instruction appears incomplete or program is not terminated with \"!\".\nEnsure each instruction is 32 bits.");
       break;
+    case ERR_NMS:
+      NONFATALERROR("Memory size to allocate appears negative or exceedingly large.");
+      break;
   }
 }
 

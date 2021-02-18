@@ -54,6 +54,8 @@ and the calculation constants
 #define ERR_SEG   4
 //Incomplete instruction warning
 #define ERR_ICI   5
+//Negative memory alloc size
+#define ERR_NMS   6
 
 /* Opcodes */
 #define OP_ADD    0

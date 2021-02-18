@@ -17,6 +17,8 @@ size_t get_mem_size(int argc, char **argv)
     {
 
       mem_size = std::stoll(mem_input);
+      if((int64_t) mem_size < 0)
+        error_handler(ERR_NMS, NULL);
       printf("Memory size set to %llu bytes.\n", mem_size);
     }
     catch(const std::invalid_argument& e)
