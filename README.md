@@ -108,6 +108,8 @@ The error codes are:
   Ensure instructions only access memory within the virtual memory bounds.
 - ICI - Incomplete instruction
   - This occurs when initially loading program to memory if an instruction appears not to be 32 bits long. This will not end execution. This can also be caused by not terminating the program with "!".
+ - NMS - Negative memory size
+  - This occurs when **size** parameter appears to be negative. This will not end execution, but if the size is negative the failed allocation of said size could if the system does not have enough RAM. 
 
 ### Program memory allocation details
 Virtual memory is variable from run to run and is allocated on the heap. Everything 
