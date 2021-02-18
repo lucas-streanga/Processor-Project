@@ -106,6 +106,8 @@ The error codes are:
 - SEG - Segmentation fault
   - This occurs during program execution when an instruction attempts to access virtual memory outside of its bounds. This will end the program execution.
   Ensure instructions only access memory within the virtual memory bounds.
+- ICI - Incomplete instruction
+  - This occurs when initially loading program to memory if an instruction appears not to be 32 bits long. This will not end execution. This can also be caused by not terminating the program with "!".
 
 ### Program memory allocation details
 Virtual memory is variable from run to run and is allocated on the heap. Everything 
