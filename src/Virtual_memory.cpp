@@ -9,7 +9,7 @@ Virtual_memory::Virtual_memory(size_t size)
   data = (byte *) malloc(size);
   if(data == NULL)
     error_handler(ERR_UTA, NULL);
-  for(int i = 0; i < size; i++)
+  for(dword i = 0; i < size; i++)
     data[i] = 0;
 
   printf("Memory Initialized Successfully.\n");

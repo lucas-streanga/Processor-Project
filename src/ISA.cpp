@@ -59,7 +59,7 @@ void op_add(struct CPU & cpu, instruction & ins)
   if(check_conditional(cpu, ins.conditional))
   {
     //Add instruction code
-    word destination, operand1, operand2, shift;
+    word destination, operand1, operand2;
     uint64_t result;
     destination = ins.Rd;
     operand1 = cpu.R[ins.Rn];
@@ -114,7 +114,7 @@ void op_sub(struct CPU & cpu, instruction & ins)
   {
     LOG("SUB");
     //Sub instruction code
-    word destination, operand1, operand2, shift;
+    word destination, operand1, operand2;
     uint64_t result;
     destination = ins.Rd;
     operand1 = cpu.R[ins.Rn];
@@ -300,7 +300,7 @@ void op_mov(struct CPU & cpu, instruction & ins)
   if(check_conditional(cpu, ins.conditional))
   {
     LOG("MOV");
-    word destination, operand, shift;
+    word destination, operand;
     destination = ins.Rn;
 
     //TODO - implement checks for overflow
@@ -323,7 +323,7 @@ void op_cmp(struct CPU & cpu, instruction & ins)
   {
     LOG("CMP");
     //cmp instruction code is similar to sub, but result is never stored.
-    word destination, operand1, operand2;
+    word operand1, operand2;
     operand1 = cpu.R[ins.Rn];
     uint64_t result;
 

@@ -52,7 +52,7 @@ void load_program_into_memory(Virtual_memory & mem, size_t mem_size)
   word ins;
   int j = 0;
   int k = 0;
-	int z;
+	size_t z;
   bool found_incomplete = false;
 
 	for(z = 0; z < mem_size / 4; z++)
@@ -108,7 +108,7 @@ void load_program_into_memory(Virtual_memory & mem, size_t mem_size)
 void print_all_memory(Virtual_memory &mem)
 {
   printf("***PRINTING MEMORY***\n");
-  for(int i = 0; i < mem.size; i += 4)
+  for(size_t i = 0; i < mem.size; i += 4)
     printf("%-12lu%010lu\t%lX\n", i, *((word *)(mem.data + i)), *((word *)(mem.data + i)));
   printf("***DONE***\n");
 }

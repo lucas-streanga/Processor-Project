@@ -14,7 +14,7 @@ OBJ6 = $(SRC6:.cpp=.o)
 EXE = Processor
 
 HFILES = include/proc_defines.h include/error_handler.h include/CPU.h include/Virtual_memory.h include/init.h include/ISA.h
-CFLAGS = -g
+CFLAGS = -O2
 INCDIR = -Iinclude
 
 all : $(EXE)
