@@ -14,12 +14,14 @@ stack pointer to the end of the user's data. The program counter will be incream
 4 bytes (1 instruction) after every instruction execution, and can be editied directly
 to create loops. The processor includes some special instructions for ease of use such 
 as PRNR (print register value) and PRNM (print memory value).
+The processor now supports binary machine files or plain-text files.
 
   # Compilation
   
   The program includes a Makefile for compilation. Running **make** will compile the program as expected. **make debug** can be used to enable debug printouts during program execution to check instruction decoding and other details. **make cleanup** is used to delete object files. No dependencies other than GCC, make, and the C and C++ standard libraries are required. 
 
 # Sample Program
+This sample program is written in plain text, but can also be written in binary machine code.
 ```
 00001000000010000000001111111111 # move 16384 into register 0
 00001010000000000000000000000000 # print r0
@@ -72,13 +74,13 @@ Virtual Cycles used: 427
 ```
 
 ## Usage
+The first command line paramater is the file to read. The second paramter is always the mode. If "text" is specified, the file will be read as plain text instructions. Otherwise, it will be read as a binary file. Binary files can be made manually with a hex editor or with the assembler. 
 The **size="size"** command line parameter will allow the user to set the size of memory in bytes.
 If the size is invalid or no size is given, the default size of **16384** will be used. The 
 **print_mem=true** parameter may be passed in to print the content of the memory before execution
-begins, so that the programmer may check their data is correct. A file with instructions and data is
-redirected in with **<**.
+begins, so that the programmer may check their data is correct. 
 
-## Program File Formatting
+## Program File Formatting for Plain-text Programs
 The user program should be written in plain text and each instruction as 32 characters, 1 or 0. 
 Whitespace is ignored, and # may be used for comments. The special character **\*** may be used
 as a shorthand for the end execution instruction, opcode 255. The file should end with **!** so the program
