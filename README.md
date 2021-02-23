@@ -1,5 +1,6 @@
 # Processor-Project
 A virtual processor with an instruction set similar to ARM made in C++.
+See aslo [Assembler](https://github.com/lucas-streanga/Assembler-Project)
 
 # How it works
 This virtual processor allows the user to write programs in machine code
