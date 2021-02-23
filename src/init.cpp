@@ -1,4 +1,5 @@
 #include"init.h"
+#include<fstream>
 
 size_t get_mem_size(int argc, char **argv)
 {
@@ -46,9 +47,24 @@ word binary_to_int(char * in)
   return ret;
 }
 
-void load_program_into_memory(Virtual_memory & mem, size_t mem_size)
+
+void load_program_into_memory(Virtual_memory & mem, size_t mem_size, std::fstream & file, bool is_file_text)
 {
   printf("Loading program into memory...\n");
+  if(!is_file_text)
+  {
+    dword i = 0;
+    while(file && i < mem.size - 4)
+    {
+      file.seekg(i);
+      file.read((char *) mem.data + i, 4);
+      i += 4;
+    }
+    if(i >= mem.size - 4)
+      error_handler(ERR_OOM, NULL);
+    return;
+  }
+
   word ins;
   int j = 0;
   int k = 0;
@@ -62,7 +78,7 @@ void load_program_into_memory(Virtual_memory & mem, size_t mem_size)
 		char c = 0;
 		for(int p = 0; p < 32; p++)
 		{
-      scanf(" %c", in + p);
+      file.get(in[p]);
       if(!found_incomplete && in[p] == 0)
       {
         error_handler(ERR_ICI, NULL);
@@ -80,7 +96,7 @@ void load_program_into_memory(Virtual_memory & mem, size_t mem_size)
 			}
       if(in[p] == '#')
       {
-        while(getchar() != '\n');
+        while(file.get() != '\n');
         c = '#';
         break;
       }
@@ -108,7 +124,7 @@ void load_program_into_memory(Virtual_memory & mem, size_t mem_size)
 void print_all_memory(Virtual_memory &mem)
 {
   printf("***PRINTING MEMORY***\n");
-  for(size_t i = 0; i < mem.size; i += 4)
+  for(size_t i = 0; i < mem.size - 4; i += 4)
     printf("%-12lu%010lu\t%lX\n", i, *((word *)(mem.data + i)), *((word *)(mem.data + i)));
   printf("***DONE***\n");
 }
