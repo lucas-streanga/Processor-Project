@@ -48,7 +48,7 @@ word binary_to_int(char * in)
 }
 
 
-void load_program_into_memory(Virtual_memory & mem, size_t mem_size, std::fstream & file, bool is_file_text)
+dword load_program_into_memory(Virtual_memory & mem, size_t mem_size, std::fstream & file, bool is_file_text)
 {
   printf("Loading program into memory...\n");
   if(!is_file_text)
@@ -62,7 +62,7 @@ void load_program_into_memory(Virtual_memory & mem, size_t mem_size, std::fstrea
     }
     if(i >= mem.size - 4)
       error_handler(ERR_OOM, NULL);
-    return;
+    return i - 4;
   }
 
   word ins;
@@ -119,6 +119,7 @@ void load_program_into_memory(Virtual_memory & mem, size_t mem_size, std::fstrea
 	}
 	if(z >= mem_size/4)
     error_handler(ERR_OOM, NULL);
+  return z;
 }
 
 void print_all_memory(Virtual_memory &mem)

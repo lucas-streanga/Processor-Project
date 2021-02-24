@@ -4,7 +4,7 @@
 #include<cstring>
 #include"init.h"
 
-CPU::CPU(Virtual_memory *mem, ISA * isa)
+CPU::CPU(Virtual_memory *mem, ISA * isa, dword program_size)
 {
     this->mem = mem;
     this->isa = isa;
@@ -16,6 +16,7 @@ CPU::CPU(Virtual_memory *mem, ISA * isa)
     cycles = 0;
     for(int i = 0; i < REGISTERS; i++)
       R[i] = 0;
+    R[15] = program_size;
     printf("CPU Initialized Successfully.\n");
 }
 

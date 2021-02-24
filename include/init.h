@@ -13,7 +13,7 @@ size_t get_mem_size(int argc, char **argv);
 
 word binary_to_int(char * in);
 
-void load_program_into_memory(Virtual_memory &mem, size_t mem_size, std::fstream &, bool);
+dword load_program_into_memory(Virtual_memory &mem, size_t mem_size, std::fstream &, bool);
 
 void print_all_memory(Virtual_memory &mem);
 
