@@ -8,7 +8,7 @@ and the calculation constants
 #ifndef _PROC_DEFINES_H
 #define _PROC_DEFINES_H
 
-#include<stdint.h>
+#include<inttypes.h>
 
 /* Terminal Colors */
 #define TERM_COLOR_RESET "\033[0m"
@@ -100,6 +100,8 @@ and the calculation constants
 #define REGISTERS           16
 
 
+//For printing correct size ints
+#define __STDC_FORMAT_MACROS
 
 /* Typedefs */
 typedef uint8_t byte;
@@ -132,7 +134,7 @@ struct timer
   }
 };
 #else
-#define TIMER
+#define TIMER(x)
 #endif
 
 /* END */

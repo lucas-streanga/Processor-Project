@@ -11,7 +11,7 @@ size_t get_mem_size(int argc, char **argv)
       mem_input = argv[i] + 5;
 
   if(argc < 2 || mem_input == NULL)
-    printf("Default memory size of %llu bytes in use\n", DEFAULT_MEM_SIZE);
+    printf("Default memory size of %" PRIu64 "bytes in use\n", (dword) DEFAULT_MEM_SIZE);
   else
   {
     try
@@ -20,17 +20,17 @@ size_t get_mem_size(int argc, char **argv)
       mem_size = std::stoll(mem_input);
       if((int64_t) mem_size < 0)
         error_handler(ERR_NMS, NULL);
-      printf("Memory size set to %llu bytes.\n", mem_size);
+      printf("Memory size set to %" PRIu64 " bytes.\n", (dword) mem_size);
     }
     catch(const std::invalid_argument& e)
     {
-      printf("Invalid memory size. Default %llu bytes will be used.\n", DEFAULT_MEM_SIZE);
+      printf("Invalid memory size. Default %" PRIu64 " bytes will be used.\n", (dword) DEFAULT_MEM_SIZE);
       mem_size = DEFAULT_MEM_SIZE;
     }
     catch(const std::out_of_range& e)
     {
-      printf("Invalid memory size. Default %llu bytes will be used.\n", DEFAULT_MEM_SIZE);
-      mem_size = DEFAULT_MEM_SIZE;
+      printf("Invalid memory size. Default %" PRIu64 " bytes will be used.\n", (dword) DEFAULT_MEM_SIZE);
+      mem_size = (size_t) DEFAULT_MEM_SIZE;
     }
   }
   return mem_size;
@@ -126,6 +126,6 @@ void print_all_memory(Virtual_memory &mem)
 {
   printf("***PRINTING MEMORY***\n");
   for(size_t i = 0; i < mem.size - 4; i += 4)
-    printf("%-12lu%010lu\t%lX\n", i, *((word *)(mem.data + i)), *((word *)(mem.data + i)));
+    printf("%-12" PRIu64 "%010" PRIu32 "\t%" PRIX32 "\n", (dword) i, *((word *)(mem.data + i)), *((word *)(mem.data + i)));
   printf("***DONE***\n");
 }

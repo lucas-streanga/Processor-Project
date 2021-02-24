@@ -85,5 +85,5 @@ void CPU::run()
     fetch();
     decode();
   }
-  printf("Execution ended.\nVirtual Cycles used: %llu\n", cycles);
+  printf("Execution ended.\nVirtual Cycles used: %" PRIu64 "\n", cycles);
 }

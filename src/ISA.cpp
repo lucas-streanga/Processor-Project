@@ -475,16 +475,16 @@ void op_prnm(struct CPU & cpu, instruction & ins)
     switch(specifier)
     {
       case 0:
-        printf("Address %lu: %llu\n", address, result);
+        printf("Address %" PRIu32 ": %" PRIu64 "\n", address, result);
         break;
       case 1:
-        printf("Address %lu: %lld\n", address, result);
+        printf("Address %" PRIu32 ": %" PRIu64 "\n", address, result);
         break;
       case 2:
-        printf("Address %lu: 0x%llX\n", address, result);
+        printf("Address %" PRIu32 ": 0x%" PRIX64 "\n", address, result);
         break;
       case 3:
-        printf("Address %lu: %c\n", address, (char) result);
+        printf("Address %" PRIu32 ": %c\n", address, (char) result);
         break;
     }
   }
