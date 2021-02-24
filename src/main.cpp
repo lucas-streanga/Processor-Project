@@ -12,10 +12,11 @@
 
 int main(int argc, char **argv)
 {
+  TIMER("Whole Program");
   size_t mem_size = get_mem_size(argc, argv);
   bool is_file_text = false;
   std::fstream file;
-  for(word i = 0; i < argc; i++)
+  for(int i = 0; i < argc; i++)
     if(!strcmp(argv[i], "text"))
       is_file_text = true;
 

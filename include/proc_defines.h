@@ -19,7 +19,7 @@ and the calculation constants
 
 #if DEBUG == 1
 #include<iostream>
-#define LOG(x) std::cout << TERM_COLOR_LOG << x << TERM_COLOR_RESET << std::endl
+#define LOG(x) std::cout << TERM_COLOR_LOG << x << TERM_COLOR_RESET << '\n'
 #include<iomanip>
 #else
 #define LOG(x)
@@ -106,6 +106,35 @@ typedef uint8_t byte;
 typedef uint16_t half;
 typedef uint32_t word;
 typedef uint64_t dword;
+
+//Now we will define a timer
+#if TIME == 1
+#define TIMER(x) timer t(x); //Will create a timer when time is called...
+//We will put our timer struct definition in here as well...
+#include<chrono>
+#include<string>
+#include<iostream>
+struct timer
+{
+  std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+  std::string name;
+
+  timer(const char * n)
+  {
+    name = n;
+    start = std::chrono::high_resolution_clock::now();
+  }
+
+  ~timer()
+  {
+    end = std::chrono::high_resolution_clock::now();
+    std::cout << TERM_COLOR_TIMER << "***TIMER: " << name << " took " << ((std::chrono::duration<float>)(end - start)).count() * 1000 << " ms." << TERM_COLOR_RESET << '\n';
+  }
+};
+#else
+#define TIMER
+#endif
+
 /* END */
 
 #endif

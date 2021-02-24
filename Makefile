@@ -17,30 +17,38 @@ HFILES = include/proc_defines.h include/error_handler.h include/CPU.h include/Vi
 CFLAGS = -O2
 INCDIR = -Iinclude
 
+TIMER = 0
+TCOMP =
+
+ifeq ($(TIMER), 1)
+#Timer compilation is ON
+TCOMP = -DTIME=1
+endif
+
 all : $(EXE)
 
 $(EXE) : $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) $(OBJ5) $(OBJ6)
 	g++ -o $(EXE) $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) $(OBJ5) $(OBJ6)
 
 $(OBJ1) : $(SRC1) $(HFILES)
-	g++ $(INCDIR) -c $(CFLAGS) $(SRC1) -o $(OBJ1)
+	g++ $(INCDIR) -c $(CFLAGS) $(TCOMP) $(SRC1) -o $(OBJ1)
 
 $(OBJ2) : $(SRC2) $(HFILES)
-	g++ $(INCDIR) -c $(CFLAGS) $(SRC2) -o $(OBJ2)
+	g++ $(INCDIR) -c $(CFLAGS) $(TCOMP) $(SRC2) -o $(OBJ2)
 
 $(OBJ3) : $(SRC3) $(HFILES)
-	g++ $(INCDIR) -c $(CFLAGS) $(SRC3) -o $(OBJ3)
+	g++ $(INCDIR) -c $(CFLAGS) $(TCOMP) $(SRC3) -o $(OBJ3)
 
 $(OBJ4) : $(SRC4) $(HFILES)
-	g++ $(INCDIR) -c $(CFLAGS) $(SRC4) -o $(OBJ4)
+	g++ $(INCDIR) -c $(CFLAGS) $(TCOMP) $(SRC4) -o $(OBJ4)
 
 $(OBJ5) : $(SRC5) $(HFILES)
-	g++ $(INCDIR) -c $(CFLAGS) $(SRC5) -o $(OBJ5)
+	g++ $(INCDIR) -c $(CFLAGS) $(TCOMP) $(SRC5) -o $(OBJ5)
 
 $(OBJ6) : $(SRC6) $(HFILES)
-	g++ $(INCDIR) -c $(CFLAGS) $(SRC6) -o $(OBJ6)
+	g++ $(INCDIR) -c $(CFLAGS) $(TCOMP) $(SRC6) -o $(OBJ6)
 
-debug: CFLAGS = -g -DDEBUG=1
+debug: CFLAGS = -g -Wall -DDEBUG=1
 debug: all
 
 cleanup:

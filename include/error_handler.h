@@ -5,8 +5,8 @@
 #include<iostream>
 #include"CPU.h"
 
-#define FATALERROR(x) std::cerr << TERM_COLOR_ERROR << "ERROR: " << x << "\nExitting now..." << TERM_COLOR_RESET << std::endl
-#define NONFATALERROR(x) std::cerr << TERM_COLOR_WARN << "WARNING: " << x << TERM_COLOR_RESET << std::endl
+#define FATALERROR(x) std::cerr << TERM_COLOR_ERROR << "ERROR: " << x << "\nExitting now..." << TERM_COLOR_RESET << '\n'
+#define NONFATALERROR(x) std::cerr << TERM_COLOR_WARN << "WARNING: " << x << TERM_COLOR_RESET << '\n'
 
 
 /* Prototypes */
