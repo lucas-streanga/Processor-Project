@@ -490,6 +490,29 @@ void op_prnm(struct CPU & cpu, instruction & ins)
   }
 }
 
+void op_brn(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    LOG("BRN");
+    //I becomes the negative or positive flag
+    //If I is set, we need to subtract from the PC (R14)
+    word offset = ((ins.S << 18) | (ins.Rn <<  14) | (ins.Rd << 10) | ins.immed) << 2;
+    cpu.cycles += 2;
+    if(ins.I)
+    {
+      LOG("Branched -" << (unsigned int) offset << " from PC value: " << (unsigned int) cpu.R[14]);
+      cpu.R[14] = cpu.R[14] - offset;
+    }
+    else
+    {
+      LOG("Branched +" << (unsigned int) offset << " from PC value: " << (unsigned int) cpu.R[14]);
+      cpu.R[14] = cpu.R[14] + offset;
+    }
+    LOG("New PC value: " << (unsigned int) cpu.R[14]);
+  }
+}
+
 ISA::ISA()
 {
   /*Initialize the handlers for the opcodes */
@@ -508,6 +531,7 @@ ISA::ISA()
   handlers[OP_CMP] =  op_cmp;
   handlers[OP_PRNR] = op_prnr;
   handlers[OP_PRNM] = op_prnm;
+  handlers[OP_BRN] = op_brn;
   handlers[OP_END] = op_end;
 
 }

@@ -40,6 +40,7 @@ and the calculation constants
 #define DEC_IMMED (0b00000000000000000000001111111111)
 #define DEC_OPTWO (0b00000000000000000000001111000000)
 #define DEC_SHIFT (0b00000000000000000000000000111111)
+#define DEC_BRN   (0b00000000000001111111111111111111)
 
 /* Error Codes */
 // Out of memory
@@ -70,7 +71,7 @@ and the calculation constants
 #define OP_CMP    9
 #define OP_PRNR   10
 #define OP_PRNM   11
-#define TOTAL_INS 11
+#define OP_BRN    12
 
 #define OP_END    255
 
