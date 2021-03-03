@@ -11,12 +11,11 @@ size_t get_mem_size(int argc, char **argv)
       mem_input = argv[i] + 5;
 
   if(argc < 2 || mem_input == NULL)
-    printf("Default memory size of %" PRIu64 "bytes in use\n", (dword) DEFAULT_MEM_SIZE);
+    printf("Default memory size of %" PRIu64 " bytes in use\n", (dword) DEFAULT_MEM_SIZE);
   else
   {
     try
     {
-
       mem_size = std::stoll(mem_input);
       if((int64_t) mem_size < 0)
         error_handler(ERR_NMS, NULL);
@@ -47,7 +46,8 @@ word binary_to_int(char * in)
   return ret;
 }
 
-
+//Load the program into the virtual memory
+//Works with binary and text-based input
 dword load_program_into_memory(Virtual_memory & mem, size_t mem_size, std::fstream & file, bool is_file_text)
 {
   printf("Loading program into memory...\n");

@@ -1,12 +1,12 @@
+#ifndef _PROC_DEFINES_H
+#define _PROC_DEFINES_H
+
 /*
 Defines for the project.
 The Opcodes will defined here,
 as well as the error codes
 and the calculation constants
 */
-
-#ifndef _PROC_DEFINES_H
-#define _PROC_DEFINES_H
 
 #include<inttypes.h>
 

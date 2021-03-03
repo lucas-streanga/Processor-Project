@@ -7,6 +7,7 @@
 bool check_conditional(CPU & cpu, byte conditional)
 {
   cpu.cycles++;
+  //Checks the conditionals and returns true/false if the condition is met.
   switch(conditional)
   {
     case COND_AL:
@@ -516,7 +517,7 @@ void op_brn(struct CPU & cpu, instruction & ins)
 ISA::ISA()
 {
   /*Initialize the handlers for the opcodes */
-  for(int i = 0; i < OP_END; i++)
+  for(int i = 0; i < OP_END + 1; i++)
     handlers[i] = NULL;
 
   handlers[OP_ADD] = op_add;

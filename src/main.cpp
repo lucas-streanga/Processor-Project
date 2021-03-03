@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 
   Virtual_memory mem(mem_size);
   ISA isa;
-  //print_all_memory(mem);
+
   dword program_size = load_program_into_memory(mem, mem_size, file, is_file_text);
   CPU cpu(&mem, &isa, program_size);
 

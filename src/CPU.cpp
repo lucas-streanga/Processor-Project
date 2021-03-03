@@ -22,7 +22,7 @@ CPU::CPU(Virtual_memory *mem, ISA * isa, dword program_size)
 
 CPU::~CPU()
 {
-
+  //Nothing to do here... no memory to deallocate
 }
 
 void CPU::fetch()
@@ -51,16 +51,7 @@ void CPU::decode()
   ins.op2 = (IR & DEC_OPTWO) >> 6;
   ins.shift = (IR & DEC_SHIFT);
   ins.immed = (IR & DEC_IMMED);
-  /*
-  printf("%u\n", ins.opcode);
-  printf("condtional: %u\n", ins.conditional);
-  printf("I: %u\n", ins.I);
-  printf("S: %u\n", ins.S);
-  printf("Rn: %u\n", ins.Rn);
-  printf("Rd: %u\n", ins.Rd);
-  printf("Op2: %u\n", ins.op2);
-  printf("immed: %u\n", ins.immed);
-  */
+
   cycles++;
   execute(ins);
 }
@@ -79,7 +70,6 @@ void CPU::execute(instruction & ins)
 
 void CPU::run()
 {
-  //print_all_memory(*mem);
   while((IR & DEC_OP) != DEC_OP)
   {
     fetch();
