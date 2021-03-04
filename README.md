@@ -11,15 +11,16 @@ and the instructions and data will be copied into memory. The processor
 will execute instructions until the end execution instruction is recieved,
 opcode 255. The processor includes 16 general purpose registers with a program counter
 and stack pointer. The program counter is initialized to the start of memory and the
-stack pointer to the end of the user's data. The program counter will be increamented
-4 bytes (1 instruction) after every instruction execution, and can be editied directly
-to create loops. The processor includes some special instructions for ease of use such
+stack pointer to the end of the user's data. The program counter will be incremented
+4 bytes (1 instruction) after every instruction execution, and can be edited directly
+or with branch instructions to create loops. The processor includes
+some special instructions for ease of use such
 as PRNR (print register value) and PRNM (print memory value).
 The processor now supports binary machine files or plain-text files.
 
-  # Compilation
+# Compilation
 
-  The program includes a Makefile for compilation. Running **make** will compile the program as expected. **make debug** can be used to enable debug printouts during program execution to check instruction decoding and other details. **make cleanup** is used to delete object files. No dependencies other than GCC, make, and the C and C++ standard libraries are required.
+The program includes a Makefile for compilation. Running **make** will compile the program as expected. **make debug** can be used to enable debug printouts during program execution to check instruction decoding and other details. **make cleanup** is used to delete object files. No dependencies other than GCC, make, and the C and C++ standard libraries are required.
 
 # Sample Program
 This sample program is written in plain text, but can also be written in binary machine code.
@@ -132,6 +133,14 @@ specially, as these are not traditional instruction.
 ## Special Instructions
 Two special instructions are included for ease of use, PRNR (print register) and PRNM (print memory). These instructions do not follow the general structure of other instructions. PRNR is formatted as follows: First 8 bits is the opcode and the next 4 are the conditions. The next 2 bits is the amount of registers to print. You can print up to 4 registers with one PRNR instruction. The next 16 bits is the registers to print, 4 bits per register. The final 2 bits is the print specifier. 0 is for unsigned integer, 1 for signed integer, 2 for hexadecimal, and 3 for character. The PRNM has a different structure as well. The first 12 bits are identical (opcode and conditional), but the next two bits are the I and S bit. The I bit is used to determine if an immediate value for an address is used (I) or if the value is in a register (0). The S bit is not used. The next two bits represent the number of bytes to print, 0 for 1 byte, 1 for 2 bytes, 2 for 4 bytes, or 3 for 8 bytes. The next 2 bits is the specifier, defined the same as PRNR, and the next 14 bits is either a register (4 bits) with shift (10 bits) if I is not set or a 14 bit address if I is set.
 
+## Branches
+Two instructions exist for branching, BRN and BRNL. Both work with a PC relative address. The address is either a register value or, if
+I is set, a 18 bit immediate value. This value is represents the number of **words**, not bytes, to branch from the PC. The bit after I
+is the sign bit, i.e whether to branch backwards from the PC or forwards. With a 18 bit value representing the number of words to jump,
+a maximum branch of 262143 instructions or 1048572 bytes in either direction is possible. BRNL works identically to BRN, but will save
+the state of the PC to the link register (R13) before jumping, so that a branch back may be done (like a return from a function).
+
+
 # Opcodes
 The current defined opcodes are as follows:
 - 0: ADD
@@ -158,16 +167,24 @@ The current defined opcodes are as follows:
   - Print content of up to 4 registers.
 - 11: PRNM
   - Print value at memory address.
+- 12: BRN
+  - Branch to a PC-relative address
+- 13: BRNL
+  - Save the current state of the PC to the link register (R13) and branch to a PC relative address
 - 255: END
    - End execution.
+
 ## Registers
-The processor has 16 register available to the user, R0 - R15. R14 is the program counter and can be edited for loops, and R15 is the stack pointer
+The processor has 16 register available to the user, R0 - R15. R13 is the
+linking register, which is used to store the current execution place
+when doing branches.
+R14 is the program counter and can be edited for loops, and R15 is the stack pointer
 which can be used to read data from memory. The processor also has another register not accessible, the IR or instruction register. This hold the
 current instruction in execution.
 
 ## Processor Pipeline
 The processor pipeline is broken into three stages, **fetch**, **decode**, and **execute**. The fetch command grabs the instruction from memory using the PC.
-The decode step decodes the instruction into its individual parts, and the exeucte command runs the instruction. The PC is incremented by 4 bytes after each fetch.
+The decode step decodes the instruction into its individual parts, and the execute command runs the instruction. The PC is incremented by 4 bytes after each fetch.
 
 ## Processor Flags
 The processor includes 4 flags, Z (zero), N (negative), O (overflow), and C (carryover). The flags are only set after execution of instruction if the S bit is set to 1 in the instruction.
@@ -212,7 +229,7 @@ conditionals.
 
 ## Program Structure
 
-This project is divided into five modules. The CPU, the memory, the error handler, the ISA/instruction handler, and the initialization. The initialization occurs in main and in init.cpp and consists of converting the text file to data, allocating memory, creating the objects, etc. The CPU code is in CPU.cpp and the corresponding header file, and outlines the CPU structure like registers and flags, and the three CPU functions, fetch, decode, and execute. The memory module is defined in Virtual_memory.cpp and contains the structure used for the memory, like the data and size. The error handler is a simple function used to handlers the error codes and ending execution while preventing memory leaks. Finally, the ISA/instruction handler is shown in ISA.cpp and the header file and defines all the instructions in the ISA. The instructions are stored in an array of function pointers, where each instruction is defined in its own function, allowing for clear organization and easy access with array notation. The program also includes proc_defines.h, which has many defines and macros used for compilation, such as the binary representation of numbers needed for decoding instructions, opcode defintions, error code definitions, and debuging defintions.
+This project is divided into five modules. The CPU, the memory, the error handler, the ISA/instruction handler, and the initialization. The initialization occurs in main and in init.cpp and consists of converting the text file to data, allocating memory, creating the objects, etc. The CPU code is in CPU.cpp and the corresponding header file, and outlines the CPU structure like registers and flags, and the three CPU functions, fetch, decode, and execute. The memory module is defined in Virtual_memory.cpp and contains the structure used for the memory, like the data and size. The error handler is a simple function used to handlers the error codes and ending execution while preventing memory leaks. Finally, the ISA/instruction handler is shown in ISA.cpp and the header file and defines all the instructions in the ISA. The instructions are stored in an array of function pointers, where each instruction is defined in its own function, allowing for clear organization and easy access with array notation. The program also includes proc_defines.h, which has many defines and macros used for compilation, such as the binary representation of numbers needed for decoding instructions, opcode definitions, error code definitions, and debugging definitions.
 
 ### Testing
 

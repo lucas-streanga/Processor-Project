@@ -10,6 +10,21 @@
 #include<cstring>
 #include<fstream>
 
+/*
+=========TODO: INSTRUCTIONS TO IMPLEMNT===========
+LSR - logical shift right
+ASR - arithmetic shift right
+LSL - logical shift left
+MUL - multiply
+DIV - divide
+AND - logical and
+LOR - logical or
+Xor - exclusive or
+POP - Take element off stack and decrement SP
+PUSH - Put element on stack and increment SP
+*/
+
+
 int main(int argc, char **argv)
 {
   TIMER("Whole Program");
