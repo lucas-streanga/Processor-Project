@@ -57,6 +57,8 @@ and the calculation constants
 #define ERR_ICI   5
 //Negative memory alloc size
 #define ERR_NMS   6
+//Too much memory
+#define ERR_TMM   7
 
 /* Opcodes */
 #define OP_ADD    0

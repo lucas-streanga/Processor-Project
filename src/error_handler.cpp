@@ -28,6 +28,9 @@ void error_handler(word error_code, CPU * cpu)
     case ERR_NMS:
       NONFATALERROR("Memory size to allocate appears negative or exceedingly large.");
       break;
+    case ERR_TMM:
+      NONFATALERROR("Memory size is larger than maximum addressible with 32 bit value\nOnly up to 4,294,967,295 bytes or 4.00 gigabytes is addressible with 32 bit addresses.");
+      break;
   }
 }
 

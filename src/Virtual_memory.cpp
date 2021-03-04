@@ -6,6 +6,10 @@ Virtual_memory::Virtual_memory(size_t size)
 {
   printf("Initializing Memory...\n");
   this->size = size;
+
+  if(size > MAX_U)
+    error_handler(ERR_TMM, NULL);
+
   data = (byte *) malloc(size);
   if(data == NULL)
     error_handler(ERR_UTA, NULL);
