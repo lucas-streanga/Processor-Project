@@ -13,6 +13,8 @@ OBJ6 = $(SRC6:.cpp=.o)
 
 EXE = Processor
 
+INSTALL_PATH = /usr/local/bin
+
 HFILES = include/proc_defines.h include/error_handler.h include/CPU.h include/Virtual_memory.h include/init.h include/ISA.h
 CFLAGS = -O2
 INCDIR = -Iinclude
@@ -54,3 +56,11 @@ debug: all
 cleanup:
 	@echo "Deleting object files..."
 	rm -f src/*.o
+
+clean:
+	make -B
+	make cleanup
+
+install : $(EXE)
+	@echo "Installing executable to path" $(INSTALL_PATH)
+	cp $(EXE) $(INSTALL_PATH)/$(EXE)

@@ -540,6 +540,148 @@ void op_brnl(struct CPU & cpu, instruction & ins)
   }
 }
 
+void op_lsl(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    LOG("LSL");
+    cpu.cycles++;
+    //We will perform a logical shift left...
+    //Rd = destination
+    //Rn - operand 1
+    //Op2 = amount to left shift by
+    word destination, operand1, operand2;
+    dword result;
+
+    destination = ins.Rd;
+    operand1 = cpu.R[ins.Rn];
+
+    //I is set, so operand 2 becomes an immediate value
+    if(ins.I)
+      operand2 = ins.immed;
+    else
+      operand2 = (cpu.R[ins.op2] + ins.shift) & MAX_U;
+
+    //Peform the shift!
+    result = operand1 << operand2;
+
+    LOG("op1 : " << operand1);
+    LOG("op2 : " << operand2);
+    LOG("Result reg: " << destination);
+
+    if(ins.S)
+    {
+      LOG("S set");
+      cpu.Z = 0;
+      cpu.N = 0;
+      cpu.C = 0;
+      cpu.O = 0;
+      cpu.cycles += 4;
+      if((result & MAX_U) == 0)
+        cpu.Z = 1;
+      if((result & MAX_U) & SIGN_BIT)
+        cpu.N = 1;
+    }
+    cpu.R[destination] = (result & MAX_U);
+    LOG("RESULT: " << cpu.R[destination]);
+  }
+}
+
+void op_lsr(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    LOG("LSR");
+    cpu.cycles++;
+    //We will perform a logical shift left...
+    //Rd = destination
+    //Rn - operand 1
+    //Op2 = amount to right shift by
+    word destination, operand1, operand2;
+    dword result;
+
+    destination = ins.Rd;
+    operand1 = cpu.R[ins.Rn];
+
+    //I is set, so operand 2 becomes an immediate value
+    if(ins.I)
+      operand2 = ins.immed;
+    else
+      operand2 = (cpu.R[ins.op2] + ins.shift) & MAX_U;
+
+    //Peform the shift!
+    result = operand1 >> operand2;
+
+    LOG("op1 : " << operand1);
+    LOG("op2 : " << operand2);
+    LOG("Result reg: " << destination);
+
+    if(ins.S)
+    {
+      LOG("S set");
+      cpu.Z = 0;
+      cpu.N = 0;
+      cpu.C = 0;
+      cpu.O = 0;
+      cpu.cycles += 4;
+      if((result & MAX_U) == 0)
+        cpu.Z = 1;
+      if((result & MAX_U) & SIGN_BIT)
+        cpu.N = 1;
+    }
+    cpu.R[destination] = (result & MAX_U);
+    LOG("RESULT: " << cpu.R[destination]);
+  }
+}
+
+void op_asr(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    LOG("ASR");
+    //We will do sign extension here...
+    cpu.cycles++;
+    //We will perform a logical shift left...
+    //Rd = destination
+    //Rn - operand 1
+    //Op2 = amount to right shift by
+    word destination, operand1, operand2;
+    dword result;
+
+    destination = ins.Rd;
+    operand1 = cpu.R[ins.Rn];
+
+    //I is set, so operand 2 becomes an immediate value
+    if(ins.I)
+      operand2 = ins.immed;
+    else
+      operand2 = (cpu.R[ins.op2] + ins.shift) & MAX_U;
+
+    //Peform the shift!
+    result = operand1 >> operand2;
+
+    LOG("op1 : " << operand1);
+    LOG("op2 : " << operand2);
+    LOG("Result reg: " << destination);
+
+    if(ins.S)
+    {
+      LOG("S set");
+      cpu.Z = 0;
+      cpu.N = 0;
+      cpu.C = 0;
+      cpu.O = 0;
+      cpu.cycles += 4;
+      if((result & MAX_U) == 0)
+        cpu.Z = 1;
+      if((result & MAX_U) & SIGN_BIT)
+        cpu.N = 1;
+    }
+    cpu.R[destination] = (result & MAX_U);
+    LOG("RESULT: " << cpu.R[destination]);
+  }
+}
+
 
 ISA::ISA()
 {
@@ -561,6 +703,9 @@ ISA::ISA()
   handlers[OP_PRNM] = op_prnm;
   handlers[OP_BRN] = op_brn;
   handlers[OP_BRNL] = op_brnl;
+  handlers[OP_LSL] = op_lsl;
+  handlers[OP_LSR] = op_lsr;
+  handlers[OP_ASR] = op_asr;
   handlers[OP_END] = op_end;
 
 }
