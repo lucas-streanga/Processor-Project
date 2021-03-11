@@ -58,8 +58,8 @@ cleanup:
 	rm -f src/*.o
 
 clean:
-	make -B
-	make cleanup
+	$(MAKE) -B
+	$(MAKE) cleanup
 
 install : $(EXE)
 	@echo "Installing executable to path" $(INSTALL_PATH)

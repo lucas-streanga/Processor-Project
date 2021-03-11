@@ -1,2 +1,3 @@
 *.o
 ins2.txt
+.gcc-flags.json
