@@ -563,26 +563,37 @@ void op_lsl(struct CPU & cpu, instruction & ins)
       operand2 = (cpu.R[ins.op2] + ins.shift) & MAX_U;
 
     //Peform the shift!
-    result = operand1 << operand2;
+    if(operand2 < 32)
+      result = operand1 << operand2;
+    else
+      result = 0;
 
     LOG("op1 : " << operand1);
     LOG("op2 : " << operand2);
     LOG("Result reg: " << destination);
 
+    cpu.R[destination] = (result & MAX_U);
     if(ins.S)
     {
       LOG("S set");
       cpu.Z = 0;
       cpu.N = 0;
       cpu.C = 0;
-      cpu.O = 0;
-      cpu.cycles += 4;
+      cpu.cycles += 3;
       if((result & MAX_U) == 0)
         cpu.Z = 1;
       if((result & MAX_U) & SIGN_BIT)
         cpu.N = 1;
+
+      //To find the carry flag, we have to obtain bit[32 - n]
+      //Exclude a shift by 0...
+      if(operand2 != 0 && operand2 < 33)
+      {
+        cpu.C = !!(cpu.R[destination] & (1 << (32 - operand2)));
+      }
+      LOG("Flags:\nZ: " << (bool) cpu.Z << "\nN: " << (bool) cpu.N << "\nC: " << (bool) cpu.C << "\nO: " << (bool) cpu.O);
+
     }
-    cpu.R[destination] = (result & MAX_U);
     LOG("RESULT: " << cpu.R[destination]);
   }
 }
@@ -610,11 +621,16 @@ void op_lsr(struct CPU & cpu, instruction & ins)
       operand2 = (cpu.R[ins.op2] + ins.shift) & MAX_U;
 
     //Peform the shift!
-    result = operand1 >> operand2;
+    if(operand2 < 32)
+      result = operand1 >> operand2;
+    else
+      result = 0;
 
     LOG("op1 : " << operand1);
     LOG("op2 : " << operand2);
     LOG("Result reg: " << destination);
+
+    cpu.R[destination] = (result & MAX_U);
 
     if(ins.S)
     {
@@ -622,14 +638,20 @@ void op_lsr(struct CPU & cpu, instruction & ins)
       cpu.Z = 0;
       cpu.N = 0;
       cpu.C = 0;
-      cpu.O = 0;
-      cpu.cycles += 4;
+      cpu.cycles += 3;
       if((result & MAX_U) == 0)
         cpu.Z = 1;
       if((result & MAX_U) & SIGN_BIT)
         cpu.N = 1;
+
+      //To find the carry flag, we have to obtain bit[n - 1]
+      //Exclude a shift by 0...
+      if(operand2 != 0 && operand2 < 33)
+      {
+        cpu.C = !!(cpu.R[destination] & (1 << (operand2 - 1)));
+      }
+      LOG("Flags:\nZ: " << (bool) cpu.Z << "\nN: " << (bool) cpu.N << "\nC: " << (bool) cpu.C << "\nO: " << (bool) cpu.O);
     }
-    cpu.R[destination] = (result & MAX_U);
     LOG("RESULT: " << cpu.R[destination]);
   }
 }
@@ -657,31 +679,157 @@ void op_asr(struct CPU & cpu, instruction & ins)
     else
       operand2 = (cpu.R[ins.op2] + ins.shift) & MAX_U;
 
-    //Peform the shift!
-    result = operand1 >> operand2;
+    //We need a loop to perform many shifts...
+    result = operand1;
+    for(int i = operand2; i > 0; i--)
+    {
+      result = result >> 1;
+      //previous sign bit...
+      if(result & PREV_SIGN_BIT)
+        result = result | SIGN_BIT;
+    }
 
     LOG("op1 : " << operand1);
-    LOG("op2 : " << operand2);
+    LOG("op2 : " << (int) operand2);
     LOG("Result reg: " << destination);
 
+    //Overflow flag is ignored in these...
+    cpu.R[destination] = (result & MAX_U);
     if(ins.S)
     {
       LOG("S set");
       cpu.Z = 0;
       cpu.N = 0;
       cpu.C = 0;
-      cpu.O = 0;
-      cpu.cycles += 4;
+      cpu.cycles += 3;
       if((result & MAX_U) == 0)
         cpu.Z = 1;
       if((result & MAX_U) & SIGN_BIT)
         cpu.N = 1;
+
+      if(operand2 != 0 && operand2 < 33)
+      {
+        cpu.C = !!(cpu.R[destination] & (1 << (operand2 - 1)));
+      }
+      else
+      {
+        cpu.C = !!(cpu.R[destination] & SIGN_BIT);
+      }
+      LOG("Flags:\nZ: " << (bool) cpu.Z << "\nN: " << (bool) cpu.N << "\nC: " << (bool) cpu.C << "\nO: " << (bool) cpu.O);
     }
-    cpu.R[destination] = (result & MAX_U);
+
     LOG("RESULT: " << cpu.R[destination]);
   }
 }
 
+void op_ret(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    //Just move the LR into the PC
+    LOG("RET");
+    LOG("Old PC value: " << cpu.R[14]);
+    LOG("Link Register: " << cpu.R[13]);
+    cpu.R[14] = cpu.R[13];
+    LOG("PC: " << cpu.R[14]);
+  }
+}
+
+void op_mul(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    //Multiply
+    LOG("MUL");
+
+    word destination, operand1, operand2;
+    dword result;
+    destination = ins.Rd;
+    operand1 = cpu.R[ins.Rn];
+
+    //Immediate value
+    if(ins.I)
+      operand2 = ins.immed;
+    else
+      operand2 = (cpu.R[ins.op2] + (ins.shift)) & MAX_U;
+
+    LOG("op1 : " << operand1);
+    LOG("op2 : " << operand2);
+    LOG("Result reg: " << destination);
+
+    //If the op2 is divisible by 2, we can just do a shift so less cycles
+    if(!(operand2 % 2))
+      cpu.cycles++;
+    else
+      cpu.cycles += operand2;
+
+    result = (dword) operand1 * (dword) operand2;
+
+    cpu.R[destination] = result & MAX_U;
+    LOG("RESULT: " << (word) cpu.R[destination]);
+
+    if(ins.S)
+    {
+      LOG("S set");
+      cpu.Z = 0;
+      cpu.N = 0;
+      cpu.cycles += 2;
+      if((result & MAX_U) == 0)
+        cpu.Z = 1;
+      if((result & MAX_U) & SIGN_BIT)
+        cpu.N = 1;
+      LOG("Flags:\nZ: " << (bool) cpu.Z << "\nN: " << (bool) cpu.N << "\nC: " << (bool) cpu.C << "\nO: " << (bool) cpu.O);
+    }
+  }
+}
+
+void op_div(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    //Multiply
+    LOG("DIV");
+
+    word destination, operand1, operand2;
+    dword result;
+    destination = ins.Rd;
+    operand1 = cpu.R[ins.Rn];
+
+    //Immediate value
+    if(ins.I)
+      operand2 = ins.immed;
+    else
+      operand2 = (cpu.R[ins.op2] + (ins.shift)) & MAX_U;
+
+    LOG("op1 : " << operand1);
+    LOG("op2 : " << operand2);
+    LOG("Result reg: " << destination);
+
+    //If the op2 is divisible by 2, we can just do a shift so less cycles
+    if(!(operand2 % 2))
+      cpu.cycles++;
+    else
+      cpu.cycles += operand2;
+
+    result = (dword) operand1 / (dword) operand2;
+
+    cpu.R[destination] = result & MAX_U;
+    LOG("RESULT: " << (word) cpu.R[destination]);
+
+    if(ins.S)
+    {
+      LOG("S set");
+      cpu.Z = 0;
+      cpu.N = 0;
+      cpu.cycles += 2;
+      if((result & MAX_U) == 0)
+        cpu.Z = 1;
+      if((result & MAX_U) & SIGN_BIT)
+        cpu.N = 1;
+      LOG("Flags:\nZ: " << (bool) cpu.Z << "\nN: " << (bool) cpu.N << "\nC: " << (bool) cpu.C << "\nO: " << (bool) cpu.O);
+    }
+  }
+}
 
 ISA::ISA()
 {
@@ -689,23 +837,26 @@ ISA::ISA()
   for(int i = 0; i < OP_END + 1; i++)
     handlers[i] = NULL;
 
-  handlers[OP_ADD] = op_add;
-  handlers[OP_SUB] = op_sub;
-  handlers[OP_LDR] = op_ldr;
-  handlers[OP_LDRH] = op_ldrh;
-  handlers[OP_LDRB] = op_ldrb;
-  handlers[OP_STR] = op_str;
-  handlers[OP_STRH] = op_strh;
-  handlers[OP_STRB] = op_strb;
-  handlers[OP_MOV] = op_mov;
-  handlers[OP_CMP] =  op_cmp;
-  handlers[OP_PRNR] = op_prnr;
-  handlers[OP_PRNM] = op_prnm;
-  handlers[OP_BRN] = op_brn;
-  handlers[OP_BRNL] = op_brnl;
-  handlers[OP_LSL] = op_lsl;
-  handlers[OP_LSR] = op_lsr;
-  handlers[OP_ASR] = op_asr;
-  handlers[OP_END] = op_end;
+  handlers[OP_ADD]  =   op_add;
+  handlers[OP_SUB]  =   op_sub;
+  handlers[OP_LDR]  =   op_ldr;
+  handlers[OP_LDRH] =   op_ldrh;
+  handlers[OP_LDRB] =   op_ldrb;
+  handlers[OP_STR]  =   op_str;
+  handlers[OP_STRH] =   op_strh;
+  handlers[OP_STRB] =   op_strb;
+  handlers[OP_MOV]  =   op_mov;
+  handlers[OP_CMP]  =   op_cmp;
+  handlers[OP_PRNR] =   op_prnr;
+  handlers[OP_PRNM] =   op_prnm;
+  handlers[OP_BRN]  =   op_brn;
+  handlers[OP_BRNL] =   op_brnl;
+  handlers[OP_LSL]  =   op_lsl;
+  handlers[OP_LSR]  =   op_lsr;
+  handlers[OP_ASR]  =   op_asr;
+  handlers[OP_RET]  =   op_ret;
+  handlers[OP_MUL]  =   op_mul;
+  handlers[OP_DIV]  =   op_div;
+  handlers[OP_END]  =   op_end;
 
 }

@@ -29,6 +29,7 @@ and the calculation constants
 #define MAX_U         4294967295L
 #define MAX_S         2147483647L
 #define SIGN_BIT      (-(2147483648L))
+#define PREV_SIGN_BIT 1073741824
 
 /* Constants for decoding */
 #define DEC_OP    (0b11111111000000000000000000000000)
@@ -78,6 +79,14 @@ and the calculation constants
 #define OP_LSL    14
 #define OP_LSR    15
 #define OP_ASR    16
+#define OP_RET    17
+#define OP_MUL    18
+#define OP_DIV    19
+#define OP_AND    20
+#define OP_LOR    21
+#define OP_XOR    22
+#define OP_POP    23
+#define OP_PUSH   24
 
 #define OP_END    255
 
