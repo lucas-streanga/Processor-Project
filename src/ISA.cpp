@@ -787,7 +787,6 @@ void op_div(struct CPU & cpu, instruction & ins)
 {
   if(check_conditional(cpu, ins.conditional))
   {
-    //Multiply
     LOG("DIV");
 
     word destination, operand1, operand2;
@@ -812,6 +811,135 @@ void op_div(struct CPU & cpu, instruction & ins)
       cpu.cycles += operand2;
 
     result = (dword) operand1 / (dword) operand2;
+
+    cpu.R[destination] = result & MAX_U;
+    LOG("RESULT: " << (word) cpu.R[destination]);
+
+    if(ins.S)
+    {
+      LOG("S set");
+      cpu.Z = 0;
+      cpu.N = 0;
+      cpu.cycles += 2;
+      if((result & MAX_U) == 0)
+        cpu.Z = 1;
+      if((result & MAX_U) & SIGN_BIT)
+        cpu.N = 1;
+      LOG("Flags:\nZ: " << (bool) cpu.Z << "\nN: " << (bool) cpu.N << "\nC: " << (bool) cpu.C << "\nO: " << (bool) cpu.O);
+    }
+  }
+}
+
+void op_and(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    LOG("AND");
+
+    word destination, operand1, operand2;
+    dword result;
+    destination = ins.Rd;
+    operand1 = cpu.R[ins.Rn];
+
+    //Immediate value
+    if(ins.I)
+      operand2 = ins.immed;
+    else
+      operand2 = (cpu.R[ins.op2] + (ins.shift)) & MAX_U;
+
+    LOG("op1 : " << operand1);
+    LOG("op2 : " << operand2);
+    LOG("Result reg: " << destination);
+
+    cpu.cycles++;
+
+    result = (operand1) & (operand2);
+
+    cpu.R[destination] = result & MAX_U;
+    LOG("RESULT: " << (word) cpu.R[destination]);
+
+    if(ins.S)
+    {
+      LOG("S set");
+      cpu.Z = 0;
+      cpu.N = 0;
+      cpu.cycles += 2;
+      if((result & MAX_U) == 0)
+        cpu.Z = 1;
+      if((result & MAX_U) & SIGN_BIT)
+        cpu.N = 1;
+      LOG("Flags:\nZ: " << (bool) cpu.Z << "\nN: " << (bool) cpu.N << "\nC: " << (bool) cpu.C << "\nO: " << (bool) cpu.O);
+    }
+  }
+}
+
+void op_lor(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    LOG("LOR");
+
+    word destination, operand1, operand2;
+    dword result;
+    destination = ins.Rd;
+    operand1 = cpu.R[ins.Rn];
+
+    //Immediate value
+    if(ins.I)
+      operand2 = ins.immed;
+    else
+      operand2 = (cpu.R[ins.op2] + (ins.shift)) & MAX_U;
+
+    LOG("op1 : " << operand1);
+    LOG("op2 : " << operand2);
+    LOG("Result reg: " << destination);
+
+    cpu.cycles++;
+
+    result = (operand1) | (operand2);
+
+    cpu.R[destination] = result & MAX_U;
+    LOG("RESULT: " << (word) cpu.R[destination]);
+
+    if(ins.S)
+    {
+      LOG("S set");
+      cpu.Z = 0;
+      cpu.N = 0;
+      cpu.cycles += 2;
+      if((result & MAX_U) == 0)
+        cpu.Z = 1;
+      if((result & MAX_U) & SIGN_BIT)
+        cpu.N = 1;
+      LOG("Flags:\nZ: " << (bool) cpu.Z << "\nN: " << (bool) cpu.N << "\nC: " << (bool) cpu.C << "\nO: " << (bool) cpu.O);
+    }
+  }
+}
+
+void op_xor(struct CPU & cpu, instruction & ins)
+{
+  if(check_conditional(cpu, ins.conditional))
+  {
+    LOG("XOR");
+
+    word destination, operand1, operand2;
+    dword result;
+    destination = ins.Rd;
+    operand1 = cpu.R[ins.Rn];
+
+    //Immediate value
+    if(ins.I)
+      operand2 = ins.immed;
+    else
+      operand2 = (cpu.R[ins.op2] + (ins.shift)) & MAX_U;
+
+    LOG("op1 : " << operand1);
+    LOG("op2 : " << operand2);
+    LOG("Result reg: " << destination);
+
+    cpu.cycles++;
+
+    result = (operand1) ^ (operand2);
 
     cpu.R[destination] = result & MAX_U;
     LOG("RESULT: " << (word) cpu.R[destination]);
@@ -857,6 +985,10 @@ ISA::ISA()
   handlers[OP_RET]  =   op_ret;
   handlers[OP_MUL]  =   op_mul;
   handlers[OP_DIV]  =   op_div;
+  handlers[OP_AND]  =   op_and;
+  handlers[OP_LOR]  =   op_lor;
+  handlers[OP_XOR]  =   op_xor;
+
   handlers[OP_END]  =   op_end;
 
 }
