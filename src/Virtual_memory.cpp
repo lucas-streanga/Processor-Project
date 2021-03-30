@@ -10,12 +10,10 @@ Virtual_memory::Virtual_memory(size_t size)
   if(size > MAX_U)
     error_handler(ERR_TMM, NULL);
 
-  data = (byte *) malloc(size);
+  //We need the mem to be set to 0!
+  data = (byte *) calloc(size, 1);
   if(data == NULL)
     error_handler(ERR_UTA, NULL);
-  for(dword i = 0; i < size; i++)
-    data[i] = 0;
-
   printf("Memory Initialized Successfully.\n");
 }
 
