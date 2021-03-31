@@ -127,26 +127,27 @@ The next bit defines if an immediate value should be used or a register value; t
 whether the flags should be set after execution; this is called the S bit. The next 4 bits represent the first register to use (0-15) and the 4 bits
 after that the destination register. The last 10 bits are either the second register to use and a shift of 6 bits if I is not set, or an immmediate
 value of up to 10 bits. Most instructions follow this pattern, but load, store, and move instructions are slightly different as they only require 2 register
-or 1 register and a shift, allowing for larger immediate values or shifts. The print register instruction and print memory instruction are also formatted
+or 1 register and a shift, allowing for larger immediate values or shifts. The return (RET) instruction only considers conditionals, and the end (END) instruction always ends execution regardless of any bits past the opcode. The print register instruction and print memory instruction are also formatted
 specially, as these are not traditional instruction.
 
 ## Special Instructions
 Two special instructions are included for ease of use, PRNR (print register) and PRNM (print memory). These instructions do not follow the general structure of other instructions. PRNR is formatted as follows: First 8 bits is the opcode and the next 4 are the conditions. The next 2 bits is the amount of registers to print. You can print up to 4 registers with one PRNR instruction. The next 16 bits is the registers to print, 4 bits per register. The final 2 bits is the print specifier. 0 is for unsigned integer, 1 for signed integer, 2 for hexadecimal, and 3 for character. The PRNM has a different structure as well. The first 12 bits are identical (opcode and conditional), but the next two bits are the I and S bit. The I bit is used to determine if an immediate value for an address is used (I) or if the value is in a register (0). The S bit is not used. The next two bits represent the number of bytes to print, 0 for 1 byte, 1 for 2 bytes, 2 for 4 bytes, or 3 for 8 bytes. The next 2 bits is the specifier, defined the same as PRNR, and the next 14 bits is either a register (4 bits) with shift (10 bits) if I is not set or a 14 bit address if I is set.
 
 ## Branches
-Two instructions exist for branching, BRN and BRNL. Both work with a PC relative address. The address is either a register value or, if
+Three instructions exist for branching, BRN, BRNL, and RET. Both BRN and BRNL work with a PC relative address. The address is either a register value or, if
 I is set, a 18 bit immediate value. This value is represents the number of **words**, not bytes, to branch from the PC. The bit after I
 is the sign bit, i.e whether to branch backwards from the PC or forwards. With a 18 bit value representing the number of words to jump,
 a maximum branch of 262143 instructions or 1048572 bytes in either direction is possible. BRNL works identically to BRN, but will save
-the state of the PC to the link register (R13) before jumping, so that a branch back may be done (like a return from a function).
+the state of the PC to the link register (R13) before jumping, so that a branch back may be done (like a return from a function). The RET instruction is 
+simply moves the LR into the PC, essentially restoring the link state and returning. 
 
 
 # Opcodes
 The current defined opcodes are as follows:
 - 0: ADD
-  - Addition
+  - Addition with two registers and a shift or one register and an immediate value. 
 - 1: SUB
-  - Subtraction
+  - Subtraction with two registers and a shift or one register and an immediate value. 
 - 2: LDR
   - Load one word from memory.
 - 3: LDRH
@@ -171,6 +172,24 @@ The current defined opcodes are as follows:
   - Branch to a PC-relative address
 - 13: BRNL
   - Save the current state of the PC to the link register (R13) and branch to a PC relative address
+- 14: LSL
+  - Perform a logical shift left with two registers and a shift or one register and an immediate value.
+- 15: LSR
+  - Perform a logical shift right with two registers and a shift or one register and an immediate value.   
+- 16: ASR 
+  - Perform a arithmetic shift right with two registers and a shift or one register and an immediate value. 
+- 17: RET
+  - Move the link register into the program counter, returning from a sub routine.
+- 18: MUL
+  - Perform integer multiplication with two registers and a shift or one register and an immediate value. 
+- 19: DIV
+  - Perform integer division with two registers and a shift or one register and an immediate value. 
+- 20: AND
+  - Perform bitwise and with two registers and a shift or one register and an immediate value.  
+- 21: LOR
+  - Perform bitwise or with two registers and a shift or one register and an immediate value.    
+- 22: XOR
+  - Perform bitwise xor with two registers and a shift or one register and an immediate value.       
 - 255: END
    - End execution.
 
