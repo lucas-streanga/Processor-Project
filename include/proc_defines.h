@@ -11,11 +11,11 @@ and the calculation constants
 #include<inttypes.h>
 
 /* Terminal Colors */
-#define TERM_COLOR_RESET "\033[0m"
-#define TERM_COLOR_WARN "\033[1m\033[33m"
-#define TERM_COLOR_LOG "\033[35m"
-#define TERM_COLOR_ERROR "\033[1m\033[31m"
-#define TERM_COLOR_TIMER "\033[32m"
+#define TERM_COLOR_RESET ""
+#define TERM_COLOR_WARN ""
+#define TERM_COLOR_LOG  ""
+#define TERM_COLOR_ERROR ""
+#define TERM_COLOR_TIMER ""
 
 #if DEBUG == 1
 #include<iostream>
